@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: micro-2
-          path: '$/build/libs/micro-2-0.0.1-SNAPSHOT.war'
+          path: '$/build/libs/micro2-0.0.1-SNAPSHOT.war'
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
       # We rename our war to ROOT.war for root context
       # See above in this blog for other ways to target the root context
       - name: Rename war to ROOT
-        run: mv micro-2-0.0.1-SNAPSHOT.war ROOT.war
+        run: mv micro2-0.0.1-SNAPSHOT.war ROOT.war
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
