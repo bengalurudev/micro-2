@@ -1,0 +1,58 @@
+name: Build and deploy WAR app to Azure Web App - myapp
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Java version
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      # This is the important change we need to make to switch between Maven to Gradle
+      # Gradle is available on these runners through typical [CLI commands](https://docs.gradle.org/current/userguide/command_line_interface.html)
+      - name: Build with Gradle
+        run: gradle build
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: micro-2
+          path: '$/build/libs/micro2-0.0.1-SNAPSHOT.war'
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: $
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: micro-2
+
+      # We rename our war to ROOT.war for root context
+      # See above in this blog for other ways to target the root context
+      - name: Rename war to ROOT
+        run: mv micro2-0.0.1-SNAPSHOT.war ROOT.war
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'micro-2'
+          slot-name: 'Production'
+          publish-profile: $
+          package: 'ROOT.war'
+
