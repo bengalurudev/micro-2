@@ -6,9 +6,12 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class Micro2Application {
+public class Micro2Application extends SpringBootServletInitializer {
 
-
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Micro2Application.class);
+    }
     public static void main(String[] args)
     {
         SpringApplication.run(Micro2Application.class, args);

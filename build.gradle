@@ -13,7 +13,6 @@ java {
     sourceCompatibility = '17'
 }
 
-ext['tomcat.version'] = '9.0.45'
 
 repositories {
     mavenCentral()
